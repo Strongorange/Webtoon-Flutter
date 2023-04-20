@@ -97,3 +97,9 @@ class HomeScreen extends StatelessWidget {
 body의 `FutureBuilder`는 `future`와 `builder`를 필수로 가진다.  
 `future`는 `Future`를 반환하는 함수를 넣어주고, `builder`는 `context`와 `snapshot`을 받는 함수를 넣어준다.  
 `snapshot`은 `future`의 결과를 담고있고 `context`는 `builder`의 context이다.
+
+## ListView && ListView.builder && ListView.separated
+
+`ListView`는 `ListView.builder`의 부모이다.  
+`ListView.builder`는 `ListView`의 `children`을 `builder`로 대체한 것이다.
+`ListView.separated`는 `ListView.builder`의 `separatorBuilder`를 추가한 것이다. 이를 통해 아이템 사이에 Separator를 추가할 수 있다.
