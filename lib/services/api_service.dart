@@ -3,8 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:webtoon/models/webtoon_model.dart';
 
 class ApiService {
-  final String baseUrl = "https://webtoon-crawler.nomadcoders.workers.dev";
-  final String today = "today";
+  static const String baseUrl =
+      "https://webtoon-crawler.nomadcoders.workers.dev";
+  static const String today = "today";
 
   /// Future 타입을 기다리는 async 함수이기 때문에 리턴타입 Future<List<WebtoonModel>>을 명시해준다.
   Future<List<WebtoonModel>> getTodaysToons() async {
