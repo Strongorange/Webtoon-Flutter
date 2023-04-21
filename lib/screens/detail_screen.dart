@@ -42,63 +42,99 @@ class _DetailScreenState extends State<DetailScreen> {
         foregroundColor: Colors.green,
         elevation: 2,
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 40,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(40),
+          child: Column(
             children: [
-              Hero(
-                tag: widget.id,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 3,
-                        offset: const Offset(2, 3),
-                        color: Colors.black.withOpacity(0.4),
-                      )
-                    ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Hero(
+                    tag: widget.id,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 3,
+                            offset: const Offset(2, 3),
+                            color: Colors.black.withOpacity(0.4),
+                          )
+                        ],
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      width: 180,
+                      child: Image.network(widget.thumb),
+                    ),
                   ),
-                  clipBehavior: Clip.hardEdge,
-                  width: 180,
-                  child: Image.network(widget.thumb),
-                ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              FutureBuilder(
+                future: webtoon,
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          snapshot.data!.about,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          "${snapshot.data!.genre} / ${snapshot.data!.age}",
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    );
+                  } else {
+                    const Text('...');
+                  }
+                  return const Text('...');
+                }),
+              ),
+              const SizedBox(height: 30),
+              FutureBuilder(
+                future: episodes,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+                      children: [
+                        for (var episode in snapshot.data!)
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.green.shade400,
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 40),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    episode.title,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  const Icon(Icons.chevron_right_rounded,
+                                      color: Colors.white),
+                                ],
+                              ),
+                            ),
+                          )
+                      ],
+                    );
+                  }
+                  return Container();
+                },
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          FutureBuilder(
-            future: webtoon,
-            builder: ((context, snapshot) {
-              if (snapshot.hasData) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        snapshot.data!.about,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        "${snapshot.data!.genre} / ${snapshot.data!.age}",
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                );
-              } else {
-                const Text('...');
-              }
-              return const Text('...');
-            }),
-          ),
-        ],
+        ),
       ),
     );
   }
