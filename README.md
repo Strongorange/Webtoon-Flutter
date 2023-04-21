@@ -195,3 +195,7 @@ Navigator.push(
 
 `Hero`는 `tag`와 `child`를 필수로 가진다. `tag`는 `Hero`를 구분하기 위한 값이다.  
 이렇게 같은 `tag`를 가진 `Hero` 위젯 안의 요소들은 화면이 전환될때 새로 생성되는 것이 아니라 그 자리에서 새로운 위치로 움직이는 것처럼 보이게 된다.
+
+## url_launcher
+
+`url_launcher`는 `url`을 통해 브라우저 앱을 실행시킬 수 있다.
