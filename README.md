@@ -103,3 +103,20 @@ body의 `FutureBuilder`는 `future`와 `builder`를 필수로 가진다.
 `ListView`는 `ListView.builder`의 부모이다.  
 `ListView.builder`는 `ListView`의 `children`을 `builder`로 대체한 것이다.
 `ListView.separated`는 `ListView.builder`의 `separatorBuilder`를 추가한 것이다. 이를 통해 아이템 사이에 Separator를 추가할 수 있다.
+
+## Navigator.push
+
+화면 이동을 `Navigator`를 통해 이동할 수 있다. push는 `(context, route)`를 받는다.  
+route는 `MaterialPageRoute`를 통해 생성할 수 있다. `MaterialPageRoute`는 `builder`를 통해 `Widget`을 반환한다.
+
+```dart
+Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  DetailScreen(title: title, thumb: thumb, id: id)),
+        );
+
+```
+
+`MaterialPageRoute`는 `builder`를 통해 `Widget`을 반환해 위젯을 새로운 화면으로 이동시킬 수 있다.
