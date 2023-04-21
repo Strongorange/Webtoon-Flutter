@@ -21,20 +21,23 @@ class WebToon extends StatelessWidget {
       },
       child: Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 3,
-                  offset: const Offset(2, 3),
-                  color: Colors.black.withOpacity(0.4),
-                )
-              ],
+          Hero(
+            tag: id,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 3,
+                    offset: const Offset(2, 3),
+                    color: Colors.black.withOpacity(0.4),
+                  )
+                ],
+              ),
+              clipBehavior: Clip.hardEdge,
+              width: 180,
+              child: Image.network(thumb),
             ),
-            clipBehavior: Clip.hardEdge,
-            width: 180,
-            child: Image.network(thumb),
           ),
           const SizedBox(
             height: 10,

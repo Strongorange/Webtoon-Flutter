@@ -120,3 +120,8 @@ Navigator.push(
 ```
 
 `MaterialPageRoute`는 `builder`를 통해 `Widget`을 반환해 위젯을 새로운 화면으로 이동시킬 수 있다.
+
+## Hero
+
+`Hero`는 `tag`와 `child`를 필수로 가진다. `tag`는 `Hero`를 구분하기 위한 값이다.  
+이렇게 같은 `tag`를 가진 `Hero` 위젯 안의 요소들은 화면이 전환될때 새로 생성되는 것이 아니라 그 자리에서 새로운 위치로 움직이는 것처럼 보이게 된다.
