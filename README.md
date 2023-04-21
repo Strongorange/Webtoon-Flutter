@@ -199,3 +199,5 @@ Navigator.push(
 ## url_launcher
 
 `url_launcher`는 `url`을 통해 브라우저 앱을 실행시킬 수 있다.
+
+## shared_preferences

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webtoon/models/webtoon_detail.dart';
 import 'package:webtoon/models/webtoon_episode_model.dart';
 import 'package:webtoon/services/api_service.dart';
@@ -18,6 +19,47 @@ class _DetailScreenState extends State<DetailScreen> {
   /// Constructor에서는 id에 접근할 수 없어 late를 사용해 선언만 해둔다.
   late Future<WebtoonDetailModel> webtoon;
   late Future<List<WebtoonEpisodeModel>> episodes;
+  late SharedPreferences prefs;
+  bool isLiked = false;
+
+  /// SharedPrefrences를 사용해 사용자가 좋아요를 눌렀는지 확인한다.
+  Future initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    final likedToons = prefs.getStringList('likedToons');
+    if (likedToons != null) {
+      /// likedToons 저장소가 있는 상황, likedToons에 id가 있는지 확인
+      if (likedToons.contains(widget.id)) {
+        setState(() {
+          isLiked = true;
+        });
+      }
+    } else {
+      /// 유저가 처음 앱을 여는 상황, likedToons 저장소가 없어 새로 생성
+      await prefs.setStringList('likedToons', []);
+    }
+  }
+
+  /// 사용자가 좋아요를 눌렀을 때 호출되는 함수
+  void onHeartTap() async {
+    final likedToons = prefs.getStringList('likedToons');
+    if (likedToons != null) {
+      if (isLiked) {
+        /// 좋아요를 누른 상태에서 누르면 좋아요를 취소한다.
+        likedToons.remove(widget.id);
+      } else {
+        /// 좋아요를 누르지 않은 상태에서 누르면 좋아요를 추가한다.
+        likedToons.add(widget.id);
+      }
+
+      /// likedToons 저장소 상태를 변경한다.
+      await prefs.setStringList('likedToons', likedToons);
+
+      /// isLiked 상태를 변경하고 렌더링한다.
+      setState(() {
+        isLiked = !isLiked;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -27,6 +69,8 @@ class _DetailScreenState extends State<DetailScreen> {
     /// widget.xxx 을 사용해서 DetailScreen Class의 변수에 접근할 수 있다.
     webtoon = ApiService.getToonById(widget.id);
     episodes = ApiService.getLatestEpisodesById(widget.id);
+
+    initPrefs();
   }
 
   @override
@@ -42,6 +86,13 @@ class _DetailScreenState extends State<DetailScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.green,
         elevation: 2,
+        actions: [
+          IconButton(
+            onPressed: onHeartTap,
+            icon:
+                Icon(isLiked ? Icons.favorite_rounded : Icons.favorite_outline),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
