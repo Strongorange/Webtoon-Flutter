@@ -54,6 +54,8 @@ class WebtoonModel {
 
 ## Future Builder
 
+### stateless widget에서 데이터 처리
+
 Data처리를 위해서 stateful widget을 사용해야할 필요가 없다.  
 Future Builder를 사용하면 setState, isLoading, async await 등을 사용하지 않고 stateless widget에서도 데이터를 처리할 수 있다.
 
@@ -97,6 +99,74 @@ class HomeScreen extends StatelessWidget {
 body의 `FutureBuilder`는 `future`와 `builder`를 필수로 가진다.  
 `future`는 `Future`를 반환하는 함수를 넣어주고, `builder`는 `context`와 `snapshot`을 받는 함수를 넣어준다.  
 `snapshot`은 `future`의 결과를 담고있고 `context`는 `builder`의 context이다.
+
+### stateful widget에서 데이터 처리
+
+`stateful widget`에서도 당연히 사용 가능하다.
+하지만 `stateful widget`에서는 State를 담당하는 클래스와 클래스의 변수들을 가진 클래스가 분리되어있기 때문에 `stateful widget`에서는 `state`를 통해 `Future`를 처리해야한다.
+
+```dart
+
+class DetailScreen extends StatefulWidget {
+  final String title, thumb, id;
+
+  const DetailScreen(
+      {super.key, required this.title, required this.thumb, required this.id});
+
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  /// Constructor에서는 id에 접근할 수 없어 late를 사용해 선언만 해둔다.
+  late Future<WebtoonDetailModel> webtoon;
+  late Future<List<WebtoonEpisodeModel>> episodes;
+
+  @override
+  void initState() {
+    /// late로 선언해둔 변수에 값을 할당한다.
+    super.initState();
+
+    /// widget.xxx 을 사용해서 DetailScreen Class의 변수에 접근할 수 있다.
+    webtoon = ApiService.getToonById(widget.id);
+    episodes = ApiService.getLatestEpisodesById(widget.id);
+  }
+```
+
+`DetailScreen` 클래스에서 `title, thumb, id`값을 받아오고 `_DetailScreenState` 클래스에서 `late` 키워드를 사용하여 `webtoon`과 `episodes`를 선언한다.  
+`late` 키워드를 사용하는 이유는 생성자 부분에서 `id`에 접근할 수 없기 때문이다. `DetailScreen` 클래스의 값에 접근하기 위해서 `widget.xxx`을 사용한다.
+
+`initState`에서 `webtoon`과 `episodes`에 값을 할당하고 이를 아래의 build 메소드 안의 `Future Builder`에서 사용한다.
+
+```dart
+FutureBuilder(
+            future: webtoon,
+            builder: ((context, snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        snapshot.data!.about,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "${snapshot.data!.genre} / ${snapshot.data!.age}",
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                const Text('...');
+              }
+              return const Text('...');
+            }),
+          ),
+```
 
 ## ListView && ListView.builder && ListView.separated
 
